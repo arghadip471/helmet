@@ -34,6 +34,12 @@ $result = $conn->query($sql);
             text-align: left;
         }
     </style>
+    <script>
+        // Refresh the page every second
+        setInterval(() => {
+            location.reload();
+        }, 1000); // 1000 milliseconds = 1 second
+    </script>
 </head>
 <body>
     <h1>Employee Data</h1>
