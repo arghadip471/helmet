@@ -19,7 +19,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Access fields
     $employee_id = $data['employee_id'] ?? '';
-    $temperature = $data['temperature'] ?? '';
+
 
     date_default_timezone_set('Asia/Kolkata');
     $current_time = date('Y-m-d H:i'); // Current timestamp
@@ -36,7 +36,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if ($area === "area_1") {
             // Update entry_time
             $sql_update = "UPDATE employeedata 
-                           SET entry_time = '$current_time', temperature = '$temperature', area = 'area_default' 
+                           SET entry_time = '$current_time', temperature = '25', area = 'area_default' 
                            WHERE employee_id = '$employee_id' AND area = 'area_1'";
             if ($conn->query($sql_update) === TRUE) {
                 echo "Entry time updated successfully.";
@@ -46,7 +46,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         } elseif ($area === "area_default") {
             // Update exit_time
             $sql_update = "UPDATE employeedata 
-                           SET exit_time = '$current_time', temperature = '$temperature', area = 'area_1'  
+                           SET exit_time = '$current_time', temperature = '25', area = 'area_1'  
                            WHERE employee_id = '$employee_id' AND area = 'area_default'";
             if ($conn->query($sql_update) === TRUE) {
                 echo "Exit time updated successfully.";
