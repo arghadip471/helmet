@@ -26,10 +26,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                            SET  temperature = '$temperature'  
                            WHERE employee_id = '$employee_id' ";
 
-    if ($conn->query($sql) === TRUE) {
+    if ($conn->query($sql_update) === TRUE) {
         echo "Data inserted successfully";
     } else {
-        echo "Error: " . $sql . "<br>" . $conn->error;
+        echo "Error: " . $sql_update . "<br>" . $conn->error;
     }
 }
 
