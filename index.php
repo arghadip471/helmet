@@ -21,17 +21,65 @@ $result = $conn->query($sql);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Employee Records</title>
     <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+        h1 {
+            text-align: center;
+            margin: 20px 0;
+            color: #444;
+        }
+
         table {
+            width: 80%;
+            margin: 20px auto;
             border-collapse: collapse;
-            width: 100%;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+            border-radius: 8px;
+            overflow: hidden;
         }
+
         th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
-        }
-        th {
-            background-color: #f2f2f2;
+            padding: 12px 15px;
             text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #007BFF;
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        td {
+            color: #555;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            table {
+                width: 95%;
+            }
+
+            th, td {
+                font-size: 14px;
+                padding: 10px;
+            }
         }
     </style>
     <script>
@@ -68,7 +116,7 @@ $result = $conn->query($sql);
                         </tr>";
                 }
             } else {
-                echo "<tr><td colspan='7'>No records found</td></tr>";
+                echo "<tr><td colspan='6' style='text-align:center;'>No records found</td></tr>";
             }
             ?>
         </tbody>
