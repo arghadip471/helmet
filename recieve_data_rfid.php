@@ -36,7 +36,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if ($area === "area_default") {
             // Update entry_time
             $sql_update = "UPDATE employeedata 
-                           SET entry_time = '$current_time', area = 'area_1', exit_time='0' 
+                           SET entry_time = '$current_time', area = 'area_1', exit_time='' 
                            WHERE employee_id = '$employee_id' AND area = 'area_default'";
             if ($conn->query($sql_update) === TRUE) {
                 echo "Entry time updated successfully.";
