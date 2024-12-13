@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Notification</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        #notificationPanel {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+    </style>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const notificationPanel = document.getElementById("notificationPanel");
+
+            // Request notification permission
+            if ("Notification" in window && Notification.permission === "default") {
+                Notification.requestPermission().then(permission => {
+                    console.log("Notification permission:", permission);
+                });
+            }
+
+            // Function to fetch the latest notification from the server
+            function fetchNotification() {
+                fetch("http://localhost/helmet/notification.php")
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.notification_message) {
+                            notificationPanel.innerText = data.notification_message;
+
+                            // Trigger browser notification
+                            if (data.notification_message !== "Waiting for data..." && Notification.permission === "granted") {
+                                new Notification("Employee Notification", {
+                                    body: data.notification_message,
+                                    icon: "https://via.placeholder.com/128" // Optional: Add an icon URL
+                                });
+                            }
+                        } else {
+                            console.error("Invalid data received from server:", data);
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Error fetching notification:", error);
+                    });
+            }
+
+            // Poll for updates every 5 seconds
+            setInterval(fetchNotification, 5000);
+
+            // Initial fetch
+            fetchNotification();
+        });
+    </script>
+</head>
+<body>
+    <h1>Employee Notification</h1>
+    <div id="notificationPanel">Waiting for data...</div>
+</body>
+</html>
