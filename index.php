@@ -100,6 +100,7 @@ $result = $conn->query($sql);
                 <th>Entry Time</th>
                 <th>Exit Time</th>
                 <th>Temperature</th>
+                <th>Air Quality</th>
             </tr>
         </thead>
         <tbody>
@@ -113,6 +114,7 @@ $result = $conn->query($sql);
                             <td>{$row['entry_time']}</td>
                             <td>{$row['exit_time']}</td>
                             <td>{$row['temperature']}</td>
+                            <td>{$row['air_quality']}</td>
                         </tr>";
                 }
             } else {

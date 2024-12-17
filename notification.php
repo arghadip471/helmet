@@ -1,4 +1,15 @@
 <?php
+
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Methods: POST, OPTIONS");
+header("Access-Control-Allow-Headers: Content-Type");
+
+// Handle preflight requests
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit;
+}
+
 // Database connection
 $servername = "localhost";
 $username = "root";
@@ -28,7 +39,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $temperature = $data['temperature'];
 
     // Fetch employee name
-    $employee_query = "SELECT employee_name FROM employeedata WHERE employee_id = ?";
+    $employee_query = "SELECT employee_name,area FROM employeedata WHERE employee_id = ?";
     $stmt = $conn->prepare($employee_query);
     $stmt->bind_param("s", $employee_id);
 
@@ -48,15 +59,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $row = $result->fetch_assoc();
     $employee_name = $row['employee_name'];
+    $area = $row['area'];
 
-    // Generate notification message
+    // Generate notification message based on area
+    date_default_timezone_set('Asia/Kolkata');
     $entry_time = date("Y-m-d H:i:s");
-    $notification_message = "$employee_name entered at $entry_time";
-
-    if ($temperature > $temperature_threshold) {
-        $notification_message .= " with a high temperature of $temperature degree!";
+    if ($area === "area_default") {
+        $notification_message = "$employee_name entered at $entry_time";
+    } elseif ($area === "area_1") {
+        $notification_message = "$employee_name exited at $entry_time";
+    } else {
+        $notification_message = "$employee_name moved to an $area area at $entry_time";
     }
-
+    header("Content-Type: application/json");
     // Return success response with notification message
     echo json_encode(['success' => true, 'notification_message' => $notification_message]);
 } else {
@@ -65,4 +80,3 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 
 $conn->close();
-?>

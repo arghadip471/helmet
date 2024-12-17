@@ -19,11 +19,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Access fields
     $employee_id = $data['employee_id'] ?? '';
-    $temperature=$data['temperature'] ??'';
+    $temperature=$data['temp'] ??'';
+    $air_quality=$data['air'] ??'';
     
     // Insert data into database
     $sql_update = "UPDATE employeedata 
-                           SET  temperature = '$temperature'  
+                           SET  temperature = '$temperature', air_quality='$air_quality'  
                            WHERE employee_id = '$employee_id' ";
 
     if ($conn->query($sql_update) === TRUE) {

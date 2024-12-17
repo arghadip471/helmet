@@ -1,3 +1,27 @@
+<?php
+$employee_id = '';
+$temperature = '';
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    header("Content-Type: application/json");
+
+    $data = json_decode(file_get_contents('php://input'), true);
+
+    if (!isset($data['employee_id']) || !isset($data['temperature'])) {
+        http_response_code(400); // Bad Request
+        echo json_encode(['error' => 'Invalid data received.']);
+        exit;
+    }
+
+    $employee_id = $data['employee_id'];
+    $alert_type=$data['alert_type'];
+
+    echo json_encode([
+        'success' => true,
+        'notification_message' => "Employee ID: $employee_id, Temperature: $temperature",
+    ]);
+    exit;
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -86,6 +110,12 @@
         document.addEventListener("DOMContentLoaded", function () {
             const notificationPanel = document.getElementById("notificationList");
 
+            // Echo PHP variables into JavaScript
+            const employeeId = "<?php echo htmlspecialchars($employee_id, ENT_QUOTES, 'UTF-8'); ?>";
+            const alert = "<?php echo htmlspecialchars($alert_type, ENT_QUOTES, 'UTF-8'); ?>";
+            console.log(employeeId);
+            console.log(alert);
+
             // Request browser notification permission
             if ("Notification" in window && Notification.permission === "default") {
                 Notification.requestPermission().then(permission => {
@@ -97,13 +127,13 @@
             async function fetchNotification() {
                 try {
                     const res = await fetch("http://localhost:3000/helmet/notify.php", {
-                        method: "GET",
+                        method: "POST",
                         headers: {
                             "Content-Type": "application/json",
                         },
                         body: JSON.stringify({
-                            employee_id: '67159183228' ,
-                            alert_type:"fall detected" ,
+                            employee_id: employeeId  ,
+                            alert_type: alert ,
                         }),
                     });
 
@@ -114,17 +144,13 @@
                     const data = await res.json();
 
                     if (data.message) {
-                        // Add notifications to the list
                         const listItem = document.createElement("div");
                         listItem.className = "notification-item";
                         listItem.innerHTML = `<strong>${data.message}</strong>`;
                         notificationPanel.appendChild(listItem);
 
                         // Trigger browser notification
-                        if (
-                            data.notification_message !== "Waiting for data..." &&
-                            Notification.permission === "granted"
-                        ) {
+                        if (Notification.permission === "granted") {
                             new Notification("Employee Notification", {
                                 body: data.notification_message,
                                 icon: "https://via.placeholder.com/128",
